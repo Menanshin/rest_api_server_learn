@@ -1,13 +1,22 @@
-FROM python:3.11
+FROM python:3.12.1 AS builder
+
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends gcc \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN --mount=type=bind,source=requirements.txt,target=/app/requirements.txt \
+  pip wheel --no-cache-dir --no-deps -r /app/requirements.txt --wheel-dir /app/wheels
+
+COPY app.py /app/
+
+RUN addgroup --system app \
+  && adduser --system --group app \
+  && chown -R app:app /app/
+USER app
 
 WORKDIR /app
 
-RUN apt-get update && apt-get install -y gcc
-
-COPY rest_api_server /app/
-
-RUN pip install --no-cache-dir -r requirements.txt
-
 LABEL authors="e.maslov"
 
-CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8000"]
+ENTRYPOINT ["uvicorn"]
+CMD ["app:app", "--host", "0.0.0.0"]

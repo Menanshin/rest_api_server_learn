@@ -29,3 +29,15 @@ cursor = conn.cursor()
 Запуск docker
 docker build -t my-fastapi-app .
 docker run -p 8000:8000 my-fastapi-app
+
+Запуск compose.yaml
+docker compose up -d
+
+Просмотр логов
+docker compose logs --follow web
+
+Просмотр событий
+docker compose events
+
+Остановка проекта
+docker compose down -v

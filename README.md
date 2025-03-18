@@ -25,3 +25,7 @@ conn = psycopg2.connect(DATABASE_URL)
 
 Открывается курсор для выполнения SQL-запросов.
 cursor = conn.cursor()
+
+Запуск docker
+docker build -t my-fastapi-app .
+docker run -p 8000:8000 my-fastapi-app
